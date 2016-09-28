@@ -26,6 +26,12 @@
 
         public int PinsKnockedDown { get; }
 
+        public override string ToString()
+        {
+            return PinsKnockedDown + (IsStrike ? "X" : string.Empty) + (IsSpare ? "/" : string.Empty) +
+                   (IsExtraBall ? "*" : string.Empty);
+        }
+
         private int ConvertNonSpare(char ballScore)
         {
             if (ballScore == 'X')

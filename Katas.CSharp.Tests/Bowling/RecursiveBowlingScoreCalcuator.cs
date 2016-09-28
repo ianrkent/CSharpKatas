@@ -11,14 +11,15 @@ namespace Katas.CSharp.Tests.Bowling
         {
             var theSplit = scoreCard.Split(new[] {"||"}, StringSplitOptions.None);
 
-            var standardBalls = theSplit[0]
-                .Replace("|", string.Empty)
-                .Select((ball, index) => new BallResult(ball, index == 0 ? '-' : theSplit[0][index-1]));
+            var normalBalls = theSplit[0].Replace("|", string.Empty);
 
-            var extraBalls = theSplit[1]
+            var normalBallResults = normalBalls.Select(
+                (ball, index) => new BallResult(ball, index == 0 ? '-' : normalBalls[index-1]));
+
+            var extraBallResults = theSplit[1]
                 .Select(ball => new BallResult(ball) { IsExtraBall = true });
 
-            var ballsInReverse = standardBalls.Union(extraBalls).Reverse();
+            var ballsInReverse = normalBallResults.Union(extraBallResults).Reverse();
 
             return CalculateScoreHelper(ballsInReverse, BallResult.NullBall, BallResult.NullBall);
         }

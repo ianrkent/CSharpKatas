@@ -19,6 +19,7 @@ namespace Katas.CSharp.Tests.Bowling
         [TestCase("X|X|X|--|--|--|--|--|--|--||", 60)]
         [TestCase("X|X|X|X|X|X|X|X|X|X||XX", 300)]
         [TestCase("5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5", 150)]
+        [TestCase("X|X|X|X|X|X|X|X|X|2/||X", 272)]
         public void CalculateTheScoreIteratively(string scoreCard, int expectedScore)
         {
             var sut = new IterativeBowlingScoreCalcuator();
@@ -41,6 +42,7 @@ namespace Katas.CSharp.Tests.Bowling
         [TestCase("X|22|--|--|--|--|--|--|--|--||", 18)]
         [TestCase("X|X|X|--|--|--|--|--|--|--||", 60)]
         [TestCase("X|X|X|X|X|X|X|X|X|X||XX", 300)]
+        [TestCase("X|X|X|X|X|X|X|X|X|2/||X", 272)]
         public void CalculateTheScoreRecursively(string scoreCard, int expectedScore)
         {
             var sut = new RecursiveBowlingScoreCalcuator();
