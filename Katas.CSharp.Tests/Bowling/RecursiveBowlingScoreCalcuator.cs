@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 
 namespace Katas.CSharp.Tests.Bowling
 {
@@ -9,22 +7,14 @@ namespace Katas.CSharp.Tests.Bowling
     {
         public int CalculateScore(string scoreCard)
         {
-            var theSplit = scoreCard.Split(new[] {"||"}, StringSplitOptions.None);
+            var balls = ScoreCardParser.ExtractBallInformation(scoreCard);
 
-            var normalBalls = theSplit[0].Replace("|", string.Empty);
+            var reverseBalls = balls.Reverse();
 
-            var normalBallResults = normalBalls.Select(
-                (ball, index) => new BallResult(ball, index == 0 ? '-' : normalBalls[index-1]));
-
-            var extraBallResults = theSplit[1]
-                .Select(ball => new BallResult(ball) { IsExtraBall = true });
-
-            var ballsInReverse = normalBallResults.Union(extraBallResults).Reverse();
-
-            return CalculateScoreHelper(ballsInReverse, BallResult.NullBall, BallResult.NullBall);
+            return CalculateScoreHelper(reverseBalls, BallInformation.NullBall, BallInformation.NullBall);
         }
 
-        private int CalculateScoreHelper(IEnumerable<BallResult> remainingBallsInReverse, BallResult lastBall, BallResult secondToLastBall)
+        private int CalculateScoreHelper(IEnumerable<BallInformation> remainingBallsInReverse, BallInformation lastBall, BallInformation secondToLastBall)
         {
             if (!remainingBallsInReverse.Any())
             {

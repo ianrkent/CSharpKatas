@@ -1,18 +1,19 @@
 ﻿namespace Katas.CSharp.Tests.Bowling
 {
-    public class BallResult
+    public class BallInformation
     {
-        public static readonly BallResult NullBall = new BallResult();
+        public static readonly BallInformation NullBall = new BallInformation();
 
-        private BallResult()
+        private BallInformation()
         {
         }
 
-        public BallResult(char ballScore, char previousBallResult = '-')
+        public BallInformation(char ballScore, char previousBallResult = '-')
         {
-            PinsKnockedDown = ballScore == '/'
-                ? 10 - ConvertNonSpare(previousBallResult)
-                : ConvertNonSpare(ballScore);
+            PinsKnockedDown = 
+                ballScore == '/'
+                    ? 10 - ConvertNonSpare(previousBallResult)
+                    : ConvertNonSpare(ballScore);
 
             IsStrike = ballScore == 'X';
             IsSpare = ballScore == '/';

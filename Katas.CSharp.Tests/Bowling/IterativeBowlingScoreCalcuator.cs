@@ -7,52 +7,27 @@ namespace Katas.CSharp.Tests.Bowling
     {
         public int CalculateScoreIteratively(string scoreCard)
         {
-            var scoreSections = scoreCard.Split(new string[] {"||"}, StringSplitOptions.None);
-            var normalTurns = scoreSections[0].Replace("|", string.Empty).ToCharArray(); ;
-            var extraTurns = scoreSections[1];
+            var balls = ScoreCardParser.ExtractBallInformation(scoreCard).ToArray();
 
-            normalTurns = scoreCard.Replace("|", string.Empty).ToCharArray();
+            var multiplyBy = balls.Select(ball => ball.IsExtraBall ? 0 : 1).ToArray();
 
-
-            var multiplyBy = Enumerable.Repeat(1, normalTurns.Length).ToArray();
-
-            for (var i = 0; i < normalTurns.Length; i++)
+            for (var i = 0; i < balls.Count(); i++)
             {
-                if (normalTurns[i] == 'X')
+                var ball = balls[i];
+
+                if (ball.IsStrike && !ball.IsExtraBall)
                 {
-                    SafeArrayElementIncrement(multiplyBy, i + 1);
-                    SafeArrayElementIncrement(multiplyBy, i + 2);
+                    multiplyBy[i + 1]++;
+                    multiplyBy[i + 2]++;
                 }
 
-                if (normalTurns[i] == '/')
+                if (ball.IsSpare)
                 {
-                    SafeArrayElementIncrement(multiplyBy, i + 1);
+                    multiplyBy[i + 1]++;
                 }
             }
 
-            var normalTurnValues = normalTurns
-                .Select((rollResult, rollIndex) => PinScoreToValue(rollResult, rollIndex > 0 ? normalTurns[rollIndex - 1] : '-'))
-                .ToArray();
-
-            return 
-                normalTurnValues
-                .Select((normalTurnVallue, i) => normalTurnVallue * multiplyBy[i])
-                .Sum() + extraTurns.Select(rollResult => PinScoreToValue(rollResult)).Sum();
-
-        }
-
-        private static void SafeArrayElementIncrement(int[] array, int i)
-        {
-            if (i >= 0 && i < array.Length) array[i]++;
-        }
-
-        private static int PinScoreToValue(char pinScore, char previousPinScore = '-')
-        {
-            if (pinScore == '-') return 0;
-            if (pinScore == 'X') return 10;
-            if (pinScore == '/') return 10 - int.Parse(previousPinScore.ToString());
-
-            return int.Parse(pinScore.ToString());
+            return balls.Select((ball, i) => ball.PinsKnockedDown * multiplyBy[i]).Sum();
         }
     }
 }

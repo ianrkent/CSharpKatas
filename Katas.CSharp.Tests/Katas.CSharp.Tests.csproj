@@ -52,10 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bowling\BallResult.cs" />
+    <Compile Include="Bowling\BallInformation.cs" />
     <Compile Include="Bowling\IterativeBowlingScoreCalcuator.cs" />
     <Compile Include="Bowling\BowlingScoreCalcuatorShould.cs" />
     <Compile Include="Bowling\RecursiveBowlingScoreCalcuator.cs" />
+    <Compile Include="Bowling\ScoreCardParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
