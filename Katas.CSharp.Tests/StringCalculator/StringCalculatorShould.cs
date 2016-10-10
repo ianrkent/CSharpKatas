@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.Caching;
 using FluentAssertions;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -41,6 +45,26 @@ namespace Katas.CSharp.Tests.StringCalculator
             var result = _sut.Add(problem);
             result.Should().Be(12);
         }
+
+        [TestCase(';')]
+        [TestCase('*')]
+        public void SupportSupportCustomDelimeters(char customDelimeter)
+        {
+            var addsTo12 = new[] { 1, 2, 3, 1, 2, 3 };
+            var problem = "//" + customDelimeter + "\n" + string.Join(customDelimeter.ToString(), addsTo12);
+
+            var result = _sut.Add(problem);
+            result.Should().Be(12);
+        }
+
+        [TestCase("1,-2,3,1,2,3", "-2")]
+        public void NegativeNumbersThrowExceptions(string problem, string expectedErrorMessageSubstring)
+        {
+            var thrownException = Assert.Throws<Exception>(() => _sut.Add(problem));
+            thrownException.Message.Should().Contain("negatives not allowed");
+            thrownException.Message.Should().Contain(expectedErrorMessageSubstring);
+        }
+
     }
 
     public class StringCalculator
@@ -52,7 +76,30 @@ namespace Katas.CSharp.Tests.StringCalculator
                 return 0;
             }
 
-            return problem.Split(',', '\n').Select(int.Parse).Sum();
+            var delimeter = ",";
+
+            if (UsesCustomDelimeter(problem))
+            {
+                problem = ExtractDelimeterFromProblem(problem, ref delimeter);
+            }
+
+            return problem
+                    .Split(new[] { delimeter, "\n" }, StringSplitOptions.None)
+                    .Select(int.Parse)
+                    .Sum();
+        }
+
+        private static string ExtractDelimeterFromProblem(string problem, ref string delimeter)
+        {
+            var firstsNewLineIndex = problem.IndexOf('\n');
+            delimeter = problem.Substring(2, firstsNewLineIndex - 2);
+            problem = problem.Substring(firstsNewLineIndex + 1);
+            return problem;
+        }
+
+        private static bool UsesCustomDelimeter(string problem)
+        {
+            return problem.Substring(0, 2) == "//";
         }
     }
 }
