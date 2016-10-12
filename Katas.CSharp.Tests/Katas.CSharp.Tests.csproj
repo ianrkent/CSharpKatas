@@ -59,6 +59,8 @@
     <Compile Include="Bowling\RecursiveBowlingScoreCalcuator.cs" />
     <Compile Include="Bowling\ScoreCardParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringCalculator\ProblemSpec.cs" />
+    <Compile Include="StringCalculator\StringCalculator.cs" />
     <Compile Include="StringCalculator\StringCalculatorShould.cs" />
   </ItemGroup>
   <ItemGroup>
